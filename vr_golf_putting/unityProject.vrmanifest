@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.vr_golf_putting.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\thomp\\OneDrive\\Documents\\GitHub\\vr-golf-putting\\vr_golf_putting\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "vr_golf_putting [Testing]"
+        }
+      }
+    }
+  ]
+}
