@@ -11,6 +11,8 @@ public class GolfPuttingBodyImageRunner : ExperimentRunner {
     //Here is where you make a list of objects in your unity scene that need to be referenced by your scripts.
     //public GameObject ReferenceToGameObject;
 
+    public GameObject origin;
+
 }
 
 

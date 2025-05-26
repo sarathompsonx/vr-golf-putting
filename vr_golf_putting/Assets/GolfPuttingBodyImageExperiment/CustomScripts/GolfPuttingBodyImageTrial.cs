@@ -17,14 +17,17 @@ public class GolfPuttingBodyImageTrial : Trial {
     // // You usually want to store a reference to your experiment runner
     GolfPuttingBodyImageRunner myRunner;
 
-    Vector2 startPos;
+    private Vector2 startPos;
+    private float _targetDist;
+    private GameObject _origin;
     
     // Required Constructor. Good place to set up references to objects in the unity scene
     public GolfPuttingBodyImageTrial(ExperimentRunner runner, DataRow data) : base(runner, data)
     {
         myRunner = (GolfPuttingBodyImageRunner)runner;  //cast the generic runner to your custom type.
         // GameObject myGameObject = myRunner.MyGameObject;  // get reference to gameObject stored in your custom runner
-
+        
+        _origin = myRunner.origin;
     }
 
 
@@ -32,7 +35,11 @@ public class GolfPuttingBodyImageTrial : Trial {
     protected override void PreMethod()
     {
         startPos = (Vector2)Data["StartPosition"]; // Read values of independent variables
-    
+        
+        _targetDist = (float)Data["TargetDist"];
+        Vector3 originPos = _origin.transform.position;
+        GolfHoleEvents.SetTargetPosition(originPos.x, originPos.z + _targetDist);
+        
         // float thisTrialsDistanceValue = (float)Data["MyDistanceFloatVariableName"]; // Read values of independent variables
         // myGameObject.transform.position = new Vector3(thisTrialsDistanceValue, 0, 0); // set up scene based on value
     }

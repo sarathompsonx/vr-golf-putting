@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f52b7cbc1de94f2fbdaad822b4e3ef4, type: 3}
   m_Name: GolfPuttingBodyImageDesign
   m_EditorClassIdentifier: 
-  TrialRepetitions: 1
+  TrialRepetitions: 6
   ExperimentRepetitions: 1
   TrialRandomization: 0
   TrialPermutationType: 1
@@ -21,6 +21,7 @@ MonoBehaviour:
   Factory:
     IndependentVariables:
     - rid: 7406738524938961148
+    - rid: 7406738524938961152
     DependentVariables: []
     ParticipantVariables: []
   ExperimentSettings: {fileID: 11400000, guid: 65be009da1d79684999c19aee792a476, type: 2}
@@ -45,4 +46,17 @@ MonoBehaviour:
         - {x: 1, y: 0.5}
         Probabilities:
         - 0
+        - 0
+    - rid: 7406738524938961152
+      type: {class: IndependentVariableFloat, ns: bmlTUX.Scripts.VariableSystem.VariableTypes, asm: bmlTUX}
+      data:
+        Name: TargetDist
+        VariableType: 1
+        DataType: 2
+        ExpandSettings: 1
+        MixingType: 0
+        Block: 0
+        Values:
+        - 2
+        Probabilities:
         - 0

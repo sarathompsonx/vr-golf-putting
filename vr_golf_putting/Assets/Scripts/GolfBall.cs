@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class GolfBall : MonoBehaviour
 {
-    [Header("Target Settings")]
-    [SerializeField] private Transform targetHole; // Assign the target hole in inspector
-    [SerializeField] private float targetDistance = 2.0f; // 200cm = 2 meters
-    
     [Header("Ball Physics")]
     [SerializeField] private float ballMass = 0.0459f; // Standard golf ball mass (45.9g)
     [SerializeField] private float ballRadius = 0.02135f; // Standard golf ball radius (21.35mm)
@@ -36,11 +32,7 @@ public class GolfBall : MonoBehaviour
         startPosition = transform.position;
         lastReportedPosition = startPosition;
         
-        // Setup target if not assigned
-        SetupTarget();
-        
         Debug.Log($"[GolfBall] Initialized at position: {startPosition}");
-        Debug.Log($"[GolfBall] Target distance: {targetDistance}m");
     }
 
     void OnEnable()
@@ -74,9 +66,7 @@ public class GolfBall : MonoBehaviour
         
         // Check if ball has stopped moving
         CheckIfBallStopped();
-        
-        // Check if ball reached target
-        CheckTargetReached();
+
     }
 
     /// <summary>
@@ -117,63 +107,6 @@ public class GolfBall : MonoBehaviour
         
         Debug.Log("[GolfBall] Physics components configured");
     }
-    
-    /// <summary>
-    /// Setup target hole at correct distance if not manually assigned
-    /// </summary>
-    private void SetupTarget()
-    {
-        if (targetHole == null)
-        {
-            // Try to find existing target
-            GameObject target = GameObject.FindGameObjectWithTag("Target");
-            if (target != null)
-            {
-                targetHole = target.transform;
-                Debug.Log("[GolfBall] Found existing target");
-            }
-            else
-            {
-                // Create a target hole at 200cm distance
-                CreateTargetHole();
-            }
-        }
-        
-        // Ensure target is at correct distance
-        if (targetHole != null)
-        {
-            Vector3 targetPosition = startPosition + Vector3.forward * targetDistance;
-            targetHole.position = new Vector3(targetPosition.x, targetHole.position.y, targetPosition.z);
-            Debug.Log($"[GolfBall] Target positioned at: {targetHole.position}");
-        }
-    }
-    
-    /// <summary>
-    /// Create a visual target hole if none exists
-    /// </summary>
-    private void CreateTargetHole()
-    {
-        GameObject hole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        hole.name = "TargetHole";
-        hole.tag = "Target";
-        
-        // Position 200cm away from start
-        Vector3 holePosition = startPosition + Vector3.forward * targetDistance;
-        hole.transform.position = holePosition;
-        
-        // Scale to look like a golf hole (roughly 10cm diameter, 5cm deep)
-        hole.transform.localScale = new Vector3(0.108f, 0.025f, 0.108f);
-        
-        // Make it look like a hole (dark material)
-        Renderer holeRenderer = hole.GetComponent<Renderer>();
-        if (holeRenderer != null)
-        {
-            holeRenderer.material.color = Color.black;
-        }
-        
-        targetHole = hole.transform;
-        Debug.Log("[GolfBall] Created target hole at 200cm distance");
-    }
 
     /// <summary>
     /// Set the ball's start position (responds to broadcaster event)
@@ -188,13 +121,6 @@ public class GolfBall : MonoBehaviour
         startPosition = position;
         lastReportedPosition = position;
         StopBallPhysics();
-        
-        // Update target position to maintain 200cm distance
-        if (targetHole != null)
-        {
-            Vector3 targetPosition = startPosition + Vector3.forward * targetDistance;
-            targetHole.position = new Vector3(targetPosition.x, targetHole.position.y, targetPosition.z);
-        }
         
         Debug.Log("Golf ball position set to: " + position);
         GolfBallEvents.BallPositionChanged(position, Vector3.zero);
@@ -237,7 +163,7 @@ public class GolfBall : MonoBehaviour
         isMoving = true;
         
         Debug.Log($"[GolfBall] Force applied: {adjustedForce} (Mode: {forceMode})");
-        Debug.Log($"[GolfBall] Resulting velocity: {rb.velocity}");
+        Debug.Log($"[GolfBall] Resulting velocity: {rb.linearVelocity}");
     }
     
     /// <summary>
@@ -284,32 +210,6 @@ public class GolfBall : MonoBehaviour
             isMoving = false;
             Debug.Log($"[GolfBall] Ball stopped at position: {transform.position}");
             
-            // Calculate final distance from target
-            if (targetHole != null)
-            {
-                float distanceFromTarget = Vector3.Distance(transform.position, targetHole.position);
-                Debug.Log($"[GolfBall] Final distance from target: {distanceFromTarget:F3}m");
-            }
-        }
-    }
-    
-    /// <summary>
-    /// Check if ball has reached the target hole
-    /// </summary>
-    private void CheckTargetReached()
-    {
-        if (targetHole != null && isMoving)
-        {
-            float distanceToTarget = Vector3.Distance(transform.position, targetHole.position);
-            
-            if (distanceToTarget <= targetTolerance)
-            {
-                Debug.Log("[GolfBall] TARGET REACHED! Ball is in the hole!");
-                StopBallPhysics();
-                
-                // Broadcast trial success
-                GolfBallEvents.TrialEnd(currentTrialId, true, distanceToTarget);
-            }
         }
     }
     
@@ -327,28 +227,6 @@ public class GolfBall : MonoBehaviour
     }
     
     /// <summary>
-    /// Public method to put ball toward target with calculated force
-    /// </summary>
-    public void PutTowardTarget(float forceMagnitude = 5f)
-    {
-        if (targetHole != null)
-        {
-            // Calculate direction to target
-            Vector3 directionToTarget = (targetHole.position - transform.position).normalized;
-            directionToTarget.y = 0; // Keep it on the ground plane
-            
-            Vector3 puttingForce = directionToTarget * forceMagnitude;
-            
-            Debug.Log($"[GolfBall] Putting toward target with force: {puttingForce}");
-            GolfBallEvents.ApplyForce(puttingForce, ForceMode.Impulse);
-        }
-        else
-        {
-            Debug.LogWarning("[GolfBall] No target assigned for putting!");
-        }
-    }
-    
-    /// <summary>
     /// Public method to start a new trial
     /// </summary>
     public void StartNewTrial()
@@ -357,17 +235,5 @@ public class GolfBall : MonoBehaviour
         ResetToStartPosition();
         GolfBallEvents.TrialStarted(currentTrialId);
         Debug.Log($"[GolfBall] Started trial {currentTrialId}");
-    }
-    
-    /// <summary>
-    /// Get current distance to target
-    /// </summary>
-    public float GetDistanceToTarget()
-    {
-        if (targetHole != null)
-        {
-            return Vector3.Distance(transform.position, targetHole.position);
-        }
-        return -1f;
     }
 }

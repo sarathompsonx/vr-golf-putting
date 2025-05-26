@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class GolfBallEvents : MonoBehaviour
 {
-    public delegate void SetStartPositionDelegate(float x, float z);
-    public static event SetStartPositionDelegate OnSetStartPosition;
+    public delegate void SetStartPositionDelegate(float x, float z);// delegate declaring a function/blueprint for a function
+    public static event SetStartPositionDelegate OnSetStartPosition;// static event others can subscribe to 
 
-    public delegate void MoveToPositionDelegate(Vector3 position);
-    public delegate void ResetToStartPositionDelegate();
-    public delegate void ApplyForceDelegate(Vector3 force, ForceMode forceMode);
-    public delegate void StopPhysicsDelegate();
-    public delegate void BallPositionChangedDelegate(Vector3 position, Vector3 velocity);
+    public delegate void MoveToPositionDelegate(Vector3 position);// full setting full position using Vector3
+    public delegate void ResetToStartPositionDelegate();// no params needed, resets to saved position 
+    public delegate void ApplyForceDelegate(Vector3 force, ForceMode forceMode);// applies force using direction and force mode
+    public delegate void StopPhysicsDelegate();// freezes physics on ball
+    public delegate void BallPositionChangedDelegate(Vector3 position, Vector3 velocity);// reports ball position and velocity 
 
-    public delegate void TrialStartedDelegate(int trialId);
-    public delegate void TrialEndedDelegate(int trialId, bool success, float distanceFromTarget);
+    public delegate void TrialStartedDelegate(int trialId);// called when new trial starts
+    public delegate void TrialEndedDelegate(int trialId, bool success, float distanceFromTarget);// called when new trial ends
     
-    public static event MoveToPositionDelegate OnMoveToPosition;
+    public static event MoveToPositionDelegate OnMoveToPosition;// belongs to class itself, not an instance
     public static event ResetToStartPositionDelegate OnResetToStartPosition;
     public static event ApplyForceDelegate OnApplyForce;
     public static event StopPhysicsDelegate OnStopPhysics;
@@ -24,12 +24,12 @@ public class GolfBallEvents : MonoBehaviour
 
     public static void SetStartPosition(float x, float z)
     {
-        OnSetStartPosition?.Invoke(x, z);
+        OnSetStartPosition?.Invoke(x, z);// notifies subscribers to move ball to this posit
     }
 
-    public static void MoveToPosition(Vector3 position)
+    public static void MoveToPosition(Vector3 position)// reset ball to saved starting point
     {
-        OnMoveToPosition?.Invoke(position);
+        OnMoveToPosition?.Invoke(position);// tells listeners to reset abll
         Debug.Log($"[GolfBallEvents] Broadcasting MoveToPosition: {position}");
     }
     
@@ -43,7 +43,7 @@ public class GolfBallEvents : MonoBehaviour
     // physics for force but will need to take out for motion tracking to come in
     public static void ApplyForce(Vector3 force, ForceMode forceMode = ForceMode.Impulse)
     {
-        OnApplyForce?.Invoke(force, forceMode);
+        OnApplyForce?.Invoke(force, forceMode);// tells listeners when to apply force
         Debug.Log($"[GolfBallEvents] Broadcasting ApplyForce: {force} with mode {forceMode}");
     }
 
