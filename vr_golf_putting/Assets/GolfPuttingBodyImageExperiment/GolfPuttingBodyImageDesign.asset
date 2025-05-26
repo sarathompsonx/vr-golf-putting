@@ -22,7 +22,9 @@ MonoBehaviour:
     IndependentVariables:
     - rid: 7406738524938961148
     - rid: 7406738524938961152
-    DependentVariables: []
+    DependentVariables:
+    - rid: 7406738524938961155
+    - rid: 7406738524938961156
     ParticipantVariables: []
   ExperimentSettings: {fileID: 11400000, guid: 65be009da1d79684999c19aee792a476, type: 2}
   ShowAdvancedEditor: 0
@@ -60,3 +62,21 @@ MonoBehaviour:
         - 2
         Probabilities:
         - 0
+    - rid: 7406738524938961155
+      type: {class: DependentVariableFloat, ns: bmlTUX.Scripts.VariableSystem.VariableTypes, asm: bmlTUX}
+      data:
+        Name: TargetX
+        VariableType: 2
+        DataType: 2
+        ExpandSettings: 1
+        Value: 0
+        DefaultValue: 0
+    - rid: 7406738524938961156
+      type: {class: DependentVariableFloat, ns: bmlTUX.Scripts.VariableSystem.VariableTypes, asm: bmlTUX}
+      data:
+        Name: TargetZ
+        VariableType: 2
+        DataType: 2
+        ExpandSettings: 1
+        Value: 0
+        DefaultValue: 0

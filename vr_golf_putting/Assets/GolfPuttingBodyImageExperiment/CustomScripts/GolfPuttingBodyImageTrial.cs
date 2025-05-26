@@ -20,6 +20,12 @@ public class GolfPuttingBodyImageTrial : Trial {
     private Vector2 startPos;
     private float _targetDist;
     private GameObject _origin;
+
+    private void RecordTargetPosition(float x, float z)
+    {
+        Data["TargetX"] = x;
+        Data["TargetZ"] = z;
+    }
     
     // Required Constructor. Good place to set up references to objects in the unity scene
     public GolfPuttingBodyImageTrial(ExperimentRunner runner, DataRow data) : base(runner, data)
@@ -38,7 +44,10 @@ public class GolfPuttingBodyImageTrial : Trial {
         
         _targetDist = (float)Data["TargetDist"];
         Vector3 originPos = _origin.transform.position;
-        GolfHoleEvents.SetTargetPosition(originPos.x, originPos.z + _targetDist);
+        float posX = originPos.x;
+        float posZ = originPos.z + _targetDist;
+        GolfHoleEvents.SetTargetPosition(posX, posZ);
+        RecordTargetPosition(posX, posZ);
         
         // float thisTrialsDistanceValue = (float)Data["MyDistanceFloatVariableName"]; // Read values of independent variables
         // myGameObject.transform.position = new Vector3(thisTrialsDistanceValue, 0, 0); // set up scene based on value
